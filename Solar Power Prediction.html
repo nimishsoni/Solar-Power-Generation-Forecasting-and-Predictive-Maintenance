@@ -13074,6 +13074,13 @@ div#notebook {
   <div tabindex="-1" id="notebook" class="border-box-sizing">
     <div class="container" id="notebook-container">
 
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Prediction-of-Solar-Power-generation-using-Linear-Regression-and-XG-Boost">Prediction of Solar Power generation using Linear Regression and XG Boost<a class="anchor-link" href="#Prediction-of-Solar-Power-generation-using-Linear-Regression-and-XG-Boost">&#182;</a></h1>
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[1]:</div>
@@ -13130,7 +13137,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#Retaining relevant data</span>
@@ -13154,11 +13161,12 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[45]:</div>
+<div class="prompt input_prompt">In&nbsp;[23]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">datasets</span><span class="p">,</span> <span class="n">linear_model</span>
-<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span><span class="p">,</span> <span class="n">GridSearchCV</span>
+<span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="kn">import</span> <span class="n">Pipeline</span>
 <span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">r2_score</span><span class="p">,</span> <span class="n">mean_squared_error</span><span class="p">,</span> <span class="n">mean_absolute_error</span><span class="p">,</span> <span class="n">mean_absolute_percentage_error</span>
 <span class="kn">from</span> <span class="nn">sklearn.utils</span> <span class="kn">import</span> <span class="n">check_array</span>
 <span class="kn">import</span> <span class="nn">xgboost</span> <span class="k">as</span> <span class="nn">xgb</span>
@@ -13173,7 +13181,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[10]:</div>
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">target</span> <span class="o">=</span> <span class="n">merged_data_plant2</span><span class="p">[</span><span class="s1">&#39;AC_POWER&#39;</span><span class="p">]</span>
@@ -13187,10 +13195,13 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[12]:</div>
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Split the data in to train and test sets</span>
+<span class="c1">#scaler = MinMaxScaler(feature_range=(0, 1))</span>
+<span class="c1">#features_norm = scaler.fit_transform(features)</span>
+<span class="c1">#target_norm = scaler.fit_transform(target)</span>
 <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">random_state</span> <span class="o">=</span> <span class="mi">5</span><span class="p">)</span>
 </pre></div>
 
@@ -13199,9 +13210,16 @@ div#notebook {
 </div>
 
 </div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Prediction-using-Linear-Regression">Prediction using Linear Regression<a class="anchor-link" href="#Prediction-using-Linear-Regression">&#182;</a></h2>
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[22]:</div>
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">lm</span> <span class="o">=</span> <span class="n">linear_model</span><span class="o">.</span><span class="n">LinearRegression</span><span class="p">()</span>
@@ -13216,16 +13234,20 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[54]:</div>
+<div class="prompt input_prompt">In&nbsp;[42]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Calculate MSE, MAE and MAPE for Predicted output to quantify model error</span>
 <span class="n">R2_lm</span> <span class="o">=</span> <span class="n">r2_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">pred_y_test_lm</span><span class="p">)</span>
-<span class="n">mse_lm</span> <span class="o">=</span> <span class="n">mean_squared_error</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">pred_y_test_lm</span><span class="p">)</span>
+<span class="n">mse_lm</span> <span class="o">=</span> <span class="n">mean_squared_error</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">pred_y_test_lm</span><span class="p">,</span> <span class="n">squared</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">mae_lm</span> <span class="o">=</span> <span class="n">mean_absolute_error</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">pred_y_test_lm</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">mean_absolute_scaled_error</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">y_train</span><span class="p">):</span>
+    <span class="n">e_t</span> <span class="o">=</span> <span class="n">y_true</span> <span class="o">-</span> <span class="n">y_pred</span>
+    <span class="n">scale</span> <span class="o">=</span> <span class="n">mean_absolute_error</span><span class="p">(</span><span class="n">y_train</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">y_train</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">e_t</span> <span class="o">/</span> <span class="n">scale</span><span class="p">))</span>
 <span class="n">mase_lm</span> <span class="o">=</span> <span class="n">mean_absolute_scaled_error</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">pred_y_test_lm</span><span class="p">,</span><span class="n">y_train</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;R2 using Linear Regression:&#39;</span><span class="p">,</span> <span class="n">R2_lm</span><span class="p">,</span> <span class="s1">&#39;  &#39;</span>   <span class="s1">&#39;MSE using Linear Regression:&#39;</span><span class="p">,</span> <span class="n">mse_lm</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1"> &#39;</span>   <span class="s1">&#39;MAE using Linear Regression:&#39;</span><span class="p">,</span> <span class="n">mae_lm</span><span class="p">,</span><span class="s1">&#39;  &#39;</span>   <span class="s1">&#39;MASE using Linear Regression:&#39;</span><span class="p">,</span> <span class="n">mase_lm</span> <span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;R2 using Linear Regression:&#39;</span><span class="p">,</span> <span class="n">R2_lm</span><span class="p">,</span> <span class="s1">&#39;  &#39;</span>   <span class="s1">&#39;RMSE using Linear Regression:&#39;</span><span class="p">,</span> <span class="n">mse_lm</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1"> &#39;</span>   <span class="s1">&#39;MAE using Linear Regression:&#39;</span><span class="p">,</span> <span class="n">mae_lm</span><span class="p">,</span><span class="s1">&#39;  &#39;</span>   <span class="s1">&#39;MASE using Linear Regression:&#39;</span><span class="p">,</span> <span class="n">mase_lm</span> <span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13242,7 +13264,7 @@ div#notebook {
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>R2 using Linear Regression: 0.8331420997408432   MSE using Linear Regression: 6165288.928054745 
+<pre>R2 using Linear Regression: 0.8331420997408432   RMSE using Linear Regression: 2482.9999855124333 
  MAE using Linear Regression: 1577.5537872942903   MASE using Linear Regression: 0.24768773390073895
 </pre>
 </div>
@@ -13252,9 +13274,50 @@ div#notebook {
 </div>
 
 </div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Prediction-using-XG-Boost-Model">Prediction using XG Boost Model<a class="anchor-link" href="#Prediction-using-XG-Boost-Model">&#182;</a></h2>
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[24]:</div>
+<div class="prompt input_prompt">In&nbsp;[13]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">config</span> <span class="o">=</span> <span class="n">xgb</span><span class="o">.</span><span class="n">get_config</span><span class="p">()</span>
+<span class="n">config</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[13]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>{&#39;use_rmm&#39;: False, &#39;verbosity&#39;: 1}</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[14]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#Fit XGB model on the Solar Generation Dataset</span>
@@ -13276,7 +13339,7 @@ div#notebook {
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[24]:</div>
+    <div class="prompt output_prompt">Out[14]:</div>
 
 
 
@@ -13300,7 +13363,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[25]:</div>
+<div class="prompt input_prompt">In&nbsp;[15]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#Plot features by Significance for forecasting</span>
@@ -13336,7 +13399,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[27]:</div>
+<div class="prompt input_prompt">In&nbsp;[16]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">pred_y_test_xgb</span> <span class="o">=</span> <span class="n">model_xgb</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
@@ -13349,16 +13412,16 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[55]:</div>
+<div class="prompt input_prompt">In&nbsp;[43]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Calculate MSE, MAE and MAPE for Predicted output to quantify model error</span>
 <span class="n">R2_xgb</span> <span class="o">=</span> <span class="n">r2_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">pred_y_test_xgb</span><span class="p">)</span>
-<span class="n">mse_xgb</span> <span class="o">=</span> <span class="n">mean_squared_error</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">pred_y_test_xgb</span><span class="p">)</span>
+<span class="n">mse_xgb</span> <span class="o">=</span> <span class="n">mean_squared_error</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">pred_y_test_xgb</span><span class="p">,</span> <span class="n">squared</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">mae_xgb</span> <span class="o">=</span> <span class="n">mean_absolute_error</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">pred_y_test_xgb</span><span class="p">)</span>
 <span class="n">mase_xgb</span> <span class="o">=</span> <span class="n">mean_absolute_scaled_error</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">pred_y_test_xgb</span><span class="p">,</span><span class="n">y_train</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;R2 using XGB:&#39;</span><span class="p">,</span> <span class="n">R2_xgb</span><span class="p">,</span> <span class="s1">&#39;  &#39;</span>   <span class="s1">&#39;MSE using XGB:&#39;</span><span class="p">,</span> <span class="n">mse_xgb</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1"> &#39;</span>   <span class="s1">&#39;MAE using XGB:&#39;</span><span class="p">,</span> <span class="n">mae_xgb</span><span class="p">,</span><span class="s1">&#39;  &#39;</span>   <span class="s1">&#39;MASE using XGB:&#39;</span><span class="p">,</span> <span class="n">mase_xgb</span> <span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;R2 using XGB:&#39;</span><span class="p">,</span> <span class="n">R2_xgb</span><span class="p">,</span> <span class="s1">&#39;  &#39;</span>   <span class="s1">&#39;RMSE using XGB:&#39;</span><span class="p">,</span> <span class="n">mse_xgb</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1"> &#39;</span>   <span class="s1">&#39;MAE using XGB:&#39;</span><span class="p">,</span> <span class="n">mae_xgb</span><span class="p">,</span><span class="s1">&#39;  &#39;</span>   <span class="s1">&#39;MASE using XGB:&#39;</span><span class="p">,</span> <span class="n">mase_xgb</span> <span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13375,12 +13438,245 @@ div#notebook {
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>R2 using XGB: 0.9020792863295167   MSE using XGB: 3618105.53100688 
+<pre>R2 using XGB: 0.9020792863295167   RMSE using XGB: 1902.1318384925057 
  MAE using XGB: 820.6042959590977   MASE using XGB: 0.12884100696428652
 </pre>
 </div>
 </div>
 
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="XGB-with-Gridsearch-Parameter-Selection">XGB with Gridsearch Parameter Selection<a class="anchor-link" href="#XGB-with-Gridsearch-Parameter-Selection">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[36]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Define Pipeline and Parammeter grid</span>
+<span class="n">pipeline</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">([</span> 
+    <span class="p">(</span><span class="s1">&#39;model&#39;</span><span class="p">,</span> <span class="n">model_xgb</span><span class="p">)</span>
+<span class="p">])</span>
+
+<span class="n">param_grid</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;model__max_depth&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">],</span>
+    <span class="s1">&#39;model__n_estimators&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span>
+    <span class="s1">&#39;model__learning_rate&#39;</span><span class="p">:[</span><span class="mf">0.02</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.3</span><span class="p">],</span>
+    <span class="s1">&#39;model__min_child_weight&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span>
+<span class="p">}</span>
+
+<span class="n">grid</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">pipeline</span><span class="p">,</span> <span class="n">param_grid</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[37]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Fit the model</span>
+<span class="n">grid</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[37]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>GridSearchCV(cv=5,
+             estimator=Pipeline(steps=[(&#39;model&#39;,
+                                        XGBRegressor(base_score=0.5,
+                                                     booster=&#39;gbtree&#39;,
+                                                     colsample_bylevel=1,
+                                                     colsample_bynode=1,
+                                                     colsample_bytree=1,
+                                                     gamma=0, gpu_id=-1,
+                                                     importance_type=&#39;gain&#39;,
+                                                     interaction_constraints=&#39;&#39;,
+                                                     learning_rate=0.300000012,
+                                                     max_delta_step=0,
+                                                     max_depth=6,
+                                                     min_child_weight=1,
+                                                     missing=nan,
+                                                     monotone_constraints=&#39;()&#39;,
+                                                     n_estimators=50, n_jobs=8,
+                                                     num_parallel_tree=1,
+                                                     random_state=0,
+                                                     reg_alpha=0, reg_lambda=1,
+                                                     scale_pos_weight=1,
+                                                     subsample=1,
+                                                     tree_method=&#39;exact&#39;,
+                                                     validate_parameters=1,
+                                                     verbosity=None))]),
+             n_jobs=-1,
+             param_grid={&#39;model__learning_rate&#39;: [0.02, 0.05, 0.1, 0.3],
+                         &#39;model__max_depth&#39;: [2, 3, 5, 7],
+                         &#39;model__min_child_weight&#39;: [0.5, 1, 2],
+                         &#39;model__n_estimators&#39;: [10, 50, 100]})</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[38]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Print the Best parameters for the model identified using Gridsearch</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Best parameters: </span><span class="si">{</span><span class="n">grid</span><span class="o">.</span><span class="n">best_params_</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Best parameters: {&#39;model__learning_rate&#39;: 0.05, &#39;model__max_depth&#39;: 2, &#39;model__min_child_weight&#39;: 2, &#39;model__n_estimators&#39;: 100}
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[39]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Predict using Gridsearch</span>
+<span class="n">pred_y_test_xgb_grid</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[41]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Calculate MSE, MAE and MAPE for Predicted output to quantify model error</span>
+<span class="n">R2_xgb_grid</span> <span class="o">=</span> <span class="n">r2_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">pred_y_test_xgb_grid</span><span class="p">)</span>
+<span class="n">mse_xgb_grid</span> <span class="o">=</span> <span class="n">mean_squared_error</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">pred_y_test_xgb_grid</span><span class="p">,</span> <span class="n">squared</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">mae_xgb_grid</span> <span class="o">=</span> <span class="n">mean_absolute_error</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">pred_y_test_xgb_grid</span><span class="p">)</span>
+<span class="n">mase_xgb_grid</span> <span class="o">=</span> <span class="n">mean_absolute_scaled_error</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">pred_y_test_xgb_grid</span><span class="p">,</span><span class="n">y_train</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;R2 using XGB_grid:&#39;</span><span class="p">,</span> <span class="n">R2_xgb_grid</span><span class="p">,</span> <span class="s1">&#39;  &#39;</span>   <span class="s1">&#39;RMSE using XGB_grid:&#39;</span><span class="p">,</span> <span class="n">mse_xgb_grid</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1"> &#39;</span>   <span class="s1">&#39;MAE using XGB_grid:&#39;</span><span class="p">,</span> <span class="n">mae_xgb_grid</span><span class="p">,</span><span class="s1">&#39;  &#39;</span>   <span class="s1">&#39;MASE using XGB_grid:&#39;</span><span class="p">,</span> <span class="n">mase_xgb_grid</span> <span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>R2 using XGB_grid: 0.9152617389788107   MSE using XGB_grid: 1769.4695912899795 
+ MAE using XGB_grid: 823.847063710843   MASE using XGB_grid: 0.12935014573499926
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Prediction-using-LSTM">Prediction using LSTM<a class="anchor-link" href="#Prediction-using-LSTM">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[18]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">keras</span>
+<span class="kn">from</span> <span class="nn">keras.models</span> <span class="kn">import</span> <span class="n">Sequential</span>
+<span class="kn">from</span> <span class="nn">keras.layers</span> <span class="kn">import</span> <span class="n">Dense</span>
+<span class="kn">from</span> <span class="nn">keras.layers</span> <span class="kn">import</span> <span class="n">LSTM</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">MinMaxScaler</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[20]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Split the normalized data in to train and test sets</span>
+<span class="n">scaler</span> <span class="o">=</span> <span class="n">MinMaxScaler</span><span class="p">(</span><span class="n">feature_range</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">features_norm</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
+<span class="c1">#target_norm = scaler.fit_transform(target)</span>
+<span class="n">X_train1</span><span class="p">,</span> <span class="n">X_test1</span><span class="p">,</span> <span class="n">y_train1</span><span class="p">,</span> <span class="n">y_test1</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">features_norm</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">random_state</span> <span class="o">=</span> <span class="mi">5</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
 </div>
 </div>
 
